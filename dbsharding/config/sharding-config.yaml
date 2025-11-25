@@ -1,0 +1,7 @@
+single-db:
+    host: localhost
+    port: 3306
+    user: testuser
+    password: testpass
+    database: userdb
+    auth: caching_sha2_password

@@ -1,0 +1,23 @@
+name: dbsharding
+version: '3.8'
+services:
+    mysql-single:
+        image: mysql:latest
+        container_name: mysql-single
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpass
+            MYSQL_DATABASE: userdb
+        ports:
+            - "3306:3306"
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            timeout: 10s
+            retries: 10
+        volumes:
+            - mysql-single-data:/var/lib/mysql
+            - ./init-scripts:/docker-entrypoint-initdb.d
+
+
+volumes:
+    mysql-single-data:
+        
