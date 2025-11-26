@@ -1,0 +1,46 @@
+services:
+  backend-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+    image: lb/backend:latest
+    environment:
+      - PORT=5000
+      - SERVICE_ID=backend-1
+    ports:
+      - "5001:5000"
+
+  backend-2:
+    image: lb/backend:latest
+    environment:
+      - PORT=5000
+      - SERVICE_ID=backend-2
+    ports:
+      - "5002:5000"
+    depends_on:
+      - backend-1
+
+  backend-3:
+    image: lb/backend:latest
+    environment:
+      - PORT=5000
+      - SERVICE_ID=backend-3
+    ports:
+      - "5003:5000"
+    depends_on:
+      - backend-1
+
+  loadbalancer:
+    build:
+      context: .
+      dockerfile: Dockerfile.lb
+    image: lb/service:latest
+    environment:
+      - PORT=8080
+      - BACKENDS=http://backend-1:5000,http://backend-2:5000,http://backend-3:5000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend-1
+      - backend-2
+      - backend-3

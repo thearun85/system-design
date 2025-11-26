@@ -1,17 +1,17 @@
 from flask import Flask, request, Response
-import argparse
 import logging
 import itertools
 import requests
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-PORT = None
-BACKENDS = []
-
+PORT = int(os.environ.get("PORT", 8080))
+BACKENDS = os.environ.get("BACKENDS", "").split(",")
+backend_cycle = itertools.cycle(BACKENDS)
 
 def get_next_backend():
     return next(backend_cycle)
@@ -37,17 +37,6 @@ def proxy():
 
     
 if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=5010, help="port for the load balancer")
-    parser.add_argument("--backends", type=str, required=True, help="comma seperated list of urls")
-
-    args = parser.parse_args()
-
-    PORT = args.port
-    BACKENDS = [ b.strip() for b in args.backends.split(',')]
-    backend_cycle = itertools.cycle(BACKENDS)
-
     logger.info(f"load balancer starting on port {PORT} ")
     logger.info(f"list of backends {BACKENDS}")
     

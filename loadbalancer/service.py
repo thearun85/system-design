@@ -1,12 +1,12 @@
 from flask import Flask, jsonify
-import argparse
 import socket
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
-SERVICE_ID = socket.gethostname()
-PORT = None
+SERVICE_ID = os.environ.get("SERVICE_ID", socket.gethostname())
+PORT = int(os.environ.get("PORT", 5000))
 
 @app.route("/")
 def index():
@@ -16,16 +16,11 @@ def index():
         "timestamp": datetime.now().isoformat()
     })
 
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "healthy"
+    })
+
 if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=5001, help="port to access the service")
-    parser.add_argument("--id", type=str, default=None, help="an id to identify the service")
-
-    args = parser.parse_args()
-
-    PORT = args.port
-    if args.id:
-        SERVICE_ID = args.id
-        
     app.run("0.0.0.0", port=PORT)
