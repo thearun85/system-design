@@ -38,6 +38,7 @@ services:
     environment:
       - PORT=8080
       - BACKENDS=http://backend-1:5000,http://backend-2:5000,http://backend-3:5000
+      - HEALTH_INTERVAL=5
     ports:
       - "8080:8080"
     depends_on:
