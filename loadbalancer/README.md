@@ -17,3 +17,6 @@ dockerized the project.
 
 ## v4 - 
 Simple round robin loadbalancer with a healthcheck
+
+## v5
+Test suite built - automated the testing for the project for most scenarios. This makes it easy to maintain as we build on top.
